@@ -40,9 +40,9 @@ vision:
     #   pose_dir         = DATA/input_vision/<sample>/poses          (if it exists)
     #   camera_params_dir= DATA/input_vision/<sample>/camera_parameters (if it exists)
     # Override here when running `spectra vision` standalone.
-    rgb_dir:           DATA/input_vision/SAMPLE1
-    pose_dir:          DATA/input_vision/SAMPLE1
-    camera_params_dir: DATA/input_vision/SAMPLE1
+    rgb_dir:           ~/spectra_runs/run_20260708_180131/DATA/s/rgb
+    pose_dir:          null #DATA/input_vision/SAMPLE1
+    camera_params_dir: null #DATA/input_vision/SAMPLE1
 
   output:
     # When `null`, derived to:  RESULTS/<sample>/vision
@@ -53,7 +53,7 @@ vision:
 
   aruco:
     dictionary:             4x4_50
-    marker_edge_length_m:   0.068
+    marker_edge_length_m:   0.156
     origin_marker_id:       null
     min_views_per_marker:   2
     align_to_aruco:         true

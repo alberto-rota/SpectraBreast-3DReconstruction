@@ -1,0 +1,154 @@
+# MASt3R / surface reconstruction sweep variant.
+# Run all:  bash scripts/run_recon_sweep.sh
+# Output:   RESULTS/SAMPLE1/recon_sweep_14_fixed_grid_fine/
+#
+# Fixed fine grid step instead of auto-estimated step.
+sample_name: SAMPLE1
+data_root: DATA
+results_root: RESULTS
+stages:
+- vision
+- registration
+vision:
+  input:
+    rgb_dir: ~/spectra_runs/run_20260708_180131/DATA/s/rgb
+    pose_dir: null
+    camera_params_dir: null
+  output:
+    root: null
+    run_name: recon_sweep_14_fixed_grid_fine
+    update_most_recent_symlink: false
+    z_axis_points_down: true
+  aruco:
+    dictionary: 4x4_50
+    marker_edge_length_m: 0.156
+    origin_marker_id: null
+    min_views_per_marker: 2
+    align_to_aruco: true
+    max_sim3_scale_deviation_when_poses_known: 0.05
+    detection_draw_scale: 2.0
+    bundle_adjustment: false
+    ba_max_iters: 1000
+    ba_lr: 0.005
+    ba_huber_delta_px: 2.0
+    ba_cam_prior_sigma_m: 0.1
+    ba_cam_prior_sigma_deg: 5.0
+    reject_views_by_alignment_error: false
+    max_view_alignment_reproj_rmse_px: 15.0
+    min_kept_views: 2
+    reject_views_with_no_markers: false
+  surface:
+    grid_step: 0.0008
+    fill_iters: 2
+    smooth_iters: 2
+    min_neighbors: 3
+    max_resolution: 2048
+    conf_threshold_percentile: 50.0
+  mast3r:
+    model_name: naver/MASt3R_ViTLarge_BaseDecoder_512_catmlpdpt_metric
+    pipeline_variant: sfm
+    scene_graph: auto
+    retrieval_model: null
+    sfm_subsample: 4
+    sfm_lr1: 0.07
+    sfm_niter1: 300
+    sfm_lr2: 0.01
+    sfm_niter2: 300
+    sfm_opt_depth: true
+    sfm_shared_intrinsics: true
+    sfm_matching_conf_thr: 5.0
+    sfm_min_conf_thr: 1.5
+    sfm_clean_depth: true
+    image_size: 512
+    neighbor_window: 2
+    desc_conf_thr: 0.1
+    dense_conf_thr: 13.0
+    voxel_size: 0.0012
+    max_points: 2000000
+    pixel_tol: 1.5
+    max_matches_per_pair: 50000
+    pose_refine_iters: 1
+    pose_refine_lr: 0.0
+    pose_refine_lr_min: 1.0e-05
+    pose_prior_sigma_deg: 1.0
+    pose_prior_sigma_m: 0.01
+    pose_prior_weight: 0.06
+    pose_refine_log_every: 25
+    pose_refine_max_drot_deg: 8.0
+    pose_refine_max_dt_m: 0.06
+    dense_refine_iters: 1
+    dense_refine_lr: 0.0
+    confidence_percentile: 99.0
+  rerun:
+    enabled: false
+    grpc_port: 9876
+    no_wait: true
+    log_cloud_rgb: true
+    log_cloud_confidence: false
+    log_cameras: false
+    log_camera_aruco_images: false
+    log_camera_confidence_images: false
+    log_aruco_3d: true
+    log_surface_mesh: false
+    log_surface_cloud_open3d_web: false
+    open3d_web_visualizer_port: 8888
+    open3d_web_show_ui: false
+    pointcloud_resample_factor: 0.25
+    save_rrd: true
+    save_rbl: true
+    rerun_subdir: rerun
+    rrd_basename: spectra.rrd
+    rbl_basename: spectra.rbl
+registration:
+  mode: sweep
+  paths:
+    hsi_hdr: null
+    mesh: null
+    aruco_json: null
+    liveview_png: null
+    output_dir: null
+  detection:
+    hsi_extraction_method: mean
+    aruco_dict: 4X4_50
+    marker_side_mm: 6.8
+    use_subpix: true
+    subpix_winsize: 5
+  roi:
+    method: sift
+    min_matches: 20
+    ransac_thresh: 3.0
+    lowe_ratio: 0.75
+    fallback_orb: true
+    save_match_viz: true
+  render:
+    resolution_mm_per_px: 5.0
+    resolution_reg_mm_per_px: 0.5
+    margin_mm: 10.0
+    ray_chunk_size: 16384
+    face_chunk_size: 2048
+    sort_rays_for_culling: true
+  pointcloud:
+    border_px: 2
+    reflectance_norm: true
+    pc_chunk_size: 100000
+  export:
+    save_pointcloud: false
+    ply: true
+    npy: true
+    csv: false
+    csv_max_points: 500000
+    save_images: false
+  batch:
+    roi_mode: false
+    sample_regex: null
+  sweep:
+    roi_mode: true
+    resolution_pairs:
+    - - 5.0
+      - 0.5
+    - - 2.0
+      - 0.5
+    - - 1.0
+      - 0.5
+    - - 0.5
+      - 0.5
